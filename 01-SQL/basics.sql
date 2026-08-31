@@ -461,9 +461,459 @@ on ma.movie_id = m.movie_id
 group by aa.name
 order by movie_count DESC;
 
+-- updation 24 aug to 31 aug 
+-- practice sheet class - 08
+
+-- Q1 1. Generate a report of all Hindi movies sorted by their revenue amount in millions. Print movie name, revenue, currency, and unit 
+ SELECT m.title ,revenue, currency , unit ,
+ CASE 
+  WHEN unit="Thousands" THEN  revenue/1000 
+  WHEN unit = "Billions" THEN revenue*1000
+  ELSE revenue
+ END  AS revenue_mln
+ FROM financials f
+ INNER JOIN movies m 
+ ON m.movie_id = f.movie_id
+ INNER JOIN languages l
+ ON l.language_id = m.language_id
+ where l.name = "Hindi"
+ order by revenue_mln DESC;
+
+
+------------------------------------------------------------------------ sheet 2 of workbench starts from here---------------------------------------------------------------
+
+-- class - 08 ( subqueries )
+# try to select movie with highest imdb rating ( we can do this by order by and limit 1 , but there is othre way too)
+
+-- by using subqueris 
+# subqueries return single value  01
+# subqueries return multiple value  02
+# subqueries return table   03
+
+-- 01 
+SELECT * FROM movies 
+where imdb_rating =  max(imdb_rating) ; -- this will eventually fail 
+
+SELECT * FROM movies 
+where imdb_rating = (select max(imdb_rating) from movies); -- This is sub query , it is also called nested query , this ubquery return the single value 
+
+SELECT * FROM movies                                   -- (subquery return sngle value)
+where imdb_rating = (select min(imdb_rating) from movies);
+
+
+-- 02
+-- now what if i want min and max both in single query    (subquery return multiple value)
+SELECT * FROM movies 
+where imdb_rating IN ((select min(imdb_rating) from movies ),(select max(imdb_rating) from movies));
+                         -- ( -- min                  ,                  max)
+						
+
+-- 03 subquery return a table 
+
+# select the actor whos age >70 and <85
+-- we can do it by having also , we can't do it by where 
+
+-- IN this query you will get problem because , select is executed after the where clause and where clause using the age alias , so this will not work 
+       select name,
+       year(curdate())-birth_year as age
+       from actors
+       where age >70 AND age<85 ;
+/*
+Clause	   SELECT alias?
+WHERE	   ❌ Generally no
+HAVING	    ✅ MySQL mein often yes
+ORDER BY	✅ Yes
+
+-- Remeber this point , WHERE cannot use the alias of SELECT , but HAVING and ORDER BY can use the alias of SELECT
+       
+FROM
+↓
+WHERE
+↓
+GROUP BY
+↓
+HAVING  ( It will get the alias of SELECT )
+↓
+SELECT
+↓
+ORDER BY
+
+*/
+
+-- so now we will know how subquery return as table 
+SELECT*
+from 
+(SELECT name , 
+year(curdate())-birth_year as age   -- this result is a table
+FROM actors ) as tbl
+where age>70 AND age<85;
+
+/* IMP NOTE 
+
+01  A SELECT alias cannot normally be used directly in WHERE, but after putting the query inside a subquery,
+ the alias becomes a column of the derived table and can be used by the outer WHERE. 
+ 
+02 In MySQL, a derived table in the FROM clause must have an alias, such as AS tbl
+*/
+	
+-- class - 09 ( ANY , ALL ,IN )
+
+-- ANY -  ANY is used in similar fashion as IN operator 
+
+# select actors who acted in any of these movies ( 101 , 110 , 121)
+
+-- No this is not working 
+SELECT name
+from actors 
+where actor_id IN (101,110,121);
+
+-- 
+select * from actors where actor_id = ANY (
+  select actor_id from movies where movie_id IN (101,110,121)
+);
+
+# select all the movies whose rating is grater than ANY of the marvel movies 
+
+-- movies which are greater imdb  than smallest of all 
+select * from movies where  imdb_rating > Any(
+select imdb_rating from movies where studio = "Marvel studios"  
+);
+
+
+-- all the movies which having greater rating then all the marvel movies 
+select * from movies where  imdb_rating > ALL(
+select imdb_rating from movies where studio = "Marvel studios"
+);
+
+-- we can also write this query instead of all 
+select * from movies where imdb_rating > (
+select max(imdb_rating) from movies where studio = "Marvel studios");
+
+--------------------------------------------------------------------------------------------------------
+
+-- class - 10 sql ( Co-related queries )
+
+# select the actor id ,actor name and the total number of movies they acted in 
+
+-- way -01 
+explain analyze
+select a.actor_id ,a.name ,count(*) as movie_count
+from movie_actor ma 
+join actors a 
+ON a.actor_id = ma.actor_id
+group by a.actor_id
+order by movie_count desc;
+
+-- way -02 by using co related query ( it seems tough but by repeating you will get it )
+explain analyze
+select 
+    name ,
+	actor_id ,
+    (select count(*) from movie_actor ma where ma.actor_id = a.actor_id) as movies_count  -- this is subquery and it has refrence of outer table called a ,thats why it is called corelated query 
+    from actors a
+    order by movies_count desc ;
+                        
+  -- [EXPLAIN ANALYZE] => THIS is used for performance analysis 
+
+-- practice sheet class 10 
+-- Q1 Select all the movies with minimum and maximum release_year. Note that there
+-- can be more than one movie in min and a max year hence output rows can be more than 2
+
+select *
+from movies 
+where release_year IN ((select max(release_year) from movies ) ,(select min(release_year) from movies ));
+
+-- Q2  Select all the rows from the movies table whose imdb_rating is higher than the average rating
+select * from movies where imdb_rating > (
+select avg(imdb_rating) as avgr from movies );
+
+-- Q3 return all the movies which is released in a particular year 
+select release_year , group_concat(title SEPARATOR '  | ') AS MOVI , count(title) as movi_count
+from movies 
+group by release_year
+ORDER BY release_year desc;
+
+-------------------------------------------------------------------------------------------------------
+
+-- class 11 (common table expression )
+
+-- This is like a temporary table which we can use for our diffrent results 
+
+# select the actor whos age >70 and <85 ( we will do with CTE )
+
+with actors_age as 
+(
+select                                       -- this is our temporary stored table on which we are working 
+name as n,
+year(current_date())- birth_year as age
+ from actors
+)
+
+select n , age 
+from actors_age 
+where age>70 and age<85;
+
+/*
+Think of a CTE as a temporary named result of a query that you can use in the query immediately after it.
+
+CTE = Common Table Expression
+
+First, create a temporary result and call it actor_age.
+Now use that temporary result
+
+WITH actor_age AS (...)
+          ↓
+   Temporary result
+          ↓
+     actor_age
+          ↓
+SELECT * FROM actor_age
+          ↓
+     WHERE age > 70
+     
+The main advantage of a CTE is readability, especially when your query becomes large.
+
+One important thing
+
+A CTE is generally not a permanent table. It exists for the duration of that single SQL statement.
+
+we can have multiple cte 
+
+WITH
+    CTE 1,
+    CTE 2
+    ↓
+Main Query
+
+WITH actor_age AS (
+    SELECT name, YEAR(CURDATE()) - birth_year AS age
+    FROM actors
+),
+old_actors AS (
+    SELECT *
+    FROM actor_age
+    WHERE age > 70
+)
+SELECT *
+FROM old_actors;
+
+*/
+
+# movies that produced 500% profit or more  and thier rating was less than avg rating for all movies 
+
+-- self approach 
+/* 
+with avg_rating as 
+(
+select avg(imdb_rating) as avgr from movies 
+)
+,
+prc_profit as 
+(
+select m.title , f.revenue , f.budget ,m.imdb_rating  ((f.revenue- f.budget )/f.budget*100) as profit_percent
+from movies m 
+join financials f 
+on m.movie_id = f.movie_id
+having profit_percent >= 500 
+)
+
+select p
+from prc_profit pp
+cross join avg_rating a
+where pp.imdb_rating < a.avgr;
+
+*/
+
+-- solving by using sub queries (vv immp) (revison)
+
+select t2.title , t2.imdb_Rating , t1.revenue , t1.budget
+from (select * , (revenue-budget)*100/budget as prft from financials) t1
+join (select * from movies where imdb_Rating < (select avg(imdb_Rating) from movies)) t2
+on t1.movie_id = t2.movie_id
+where prft >= 500;
+
+-- by using CTE 
+with
+avg_Rating as 
+(
+ select * from movies where imdb_rating < (select avg(imdb_rating) as avgr from movies )
+)
+,
+prft as 
+(
+select * , (revenue-budget)*100/budget as pp from financials 
+)
+
+select t1.title ,t2.revenue ,t1.imdb_Rating
+from avg_Rating  t1
+join prft t2
+on t1.movie_id = t2.movie_id
+where t2.pp >= 500;
+
+
+-- Benifits  Of CTE
+/*
+01 simple queries 
+02 good redability 
+03 same results can be refrenced anywhere within the scope 
+04 gives potential candidate for views 
+
+https://dev.mysql.com/doc/refman/8.0/en/with.html   
+ADVANCE CONCEPT OF RECURSIVE SUB QUERIES 
+*/
+
+-- PRACTICE SHEET CLASS 11  (revision)
+/* Q1 Select all Hollywood movies released after the year 2000 that made more than 500 million $ profit 
+or more profit. Note that all Hollywood movies have millions as a unit hence you don't need to do the 
+unit conversion. Also, you can write this query without CTE as well but you should try to write this
+ using CTE only */
+ 
+ -- WITHOUT CTE 
+ select t1.title , t1.industry , t2.profit ,t2.revenue , t2.unit
+ from ( select * from movies where industry = "hollywood" AND release_year>2000) t1
+ join (select * , (revenue-budget) as profit  from financials) t2
+ on t1.movie_id = t2.movie_id
+ where t2.profit>500
+ order by t2.profit desc;
+ 
+ -- WITH CTE 
+ 
+ with 
+ t1 as ( select * from movies where industry = "hollywood" AND release_year>2000) ,
+ t2 as ( select * , (revenue-budget) as profit  from financials)
+ 
+ select t1.title,t1.industry,t2.revenue,t2.profit,t2.unit
+ from t1 
+ join t2 
+ on t1.movie_id = t2.movie_id
+ where t2.profit>500
+ order by t2.profit desc;
+ 
+ -- or , more short than this 
+ 
+ with cte as (select title, release_year, (revenue-budget) as profit
+			from movies m
+			join financials f
+			on m.movie_id=f.movie_id
+			where release_year>2000 and industry="hollywood"
+	)
+	select * from cte where profit>500
+
+-- ---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Sql Class 12  (data intigrity and normalization)
+
+/*
+why we need multiple tables  => (data duplicacy , redundancy , more database storage )
+
+
+01 Data intigrity = Data Integrity is the measure of consistency and accuracy of data over its life cycle.
+
+02 ‘Link table’ is a term used to describe a table that acts as the link between the two tables.
+
+03 Normalization is a process of organizing a database to avoid duplication, and improve data integrity
+
+*/
+
+-- Sql class 13 (ERD Diageam )
+
+/*
+
+*/
+
+
+-- Sql class 14 (Data types in SQL ) difrent data types has diffrent storage spaces 
+/*
+01 Numeric data types =  these are used for whole numbers , and based on our requirements we will use this 
+
+02 Floating point  =  (float 4 accuracy , double 8bytes precision , decimal ) float and double store  approximate value and decimal use exact value which is used in financial transaction 
+
+03 String =  (char :  it is fixed length , char(3)=> depicts it always contain lengt as 3 not less not more ), 
+              (Varchar : it is variable length , varchar(10) =>   it depicts 10 as a maximum size )
+    
+04 Enum  = (we use this when we know what we are storing has limited options , and you cannot edit a random value in the colum where you defined enum 
+for ag :  units can be only thousand , billion , million , but if u try to use hundered there than it will be error )
+
+05 Blob = (we can use image base encoding using BLOB )
+
+06 data and time = (YEAR() , DATETIME() , TIME() , TIMESTAMP() , DATE)
+
+
+SQL: YEAR vs INT
+
+Storage: YEAR uses 1 Byte | INT uses 4 Bytes (75% memory waste)
+
+Allowed Range: YEAR (1901 to 2155) | INT (-2.14B to +2.14B)
+
+Data Validation: YEAR is auto-validated | INT requires a manual CHECK constraint
+
+Index Speed: YEAR has smaller indexes, keeping queries faster in RAM
+
+Takeaway:
+
+Use YEAR for modern 4-digit years (1901–2155).
+
+Use SMALLINT (2 Bytes) for historical years before 1901 or future years beyond 2155.
+
+
+07  JSON => ()
+
+*/
+
+
+-- ---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- sql class -13 (Primary key )
+
+/*
+
+Primary key 
+01  It is a natural key because it is a part of our data , and we use this for unique identification  ,
+02 = it can have multiple coloums ,
+03 it shouldnt be null
+04 AI(auto increment) => this actually on inserting , auto increment the value , you can check it in movies_db by inserting new value in movies table
+
+surrogate key =  primary key that is genrated by user artifically is called surrogate key , It is a artifically created for uniqely identify the record 
+
+PK - primary key 
+
+NN - not null 
+
+UQ - unique index (: Ensures all values in the column are distinct across rows (allows one NULL value unless NN is also checked)
+
+B  - binary (Stores data as binary byte strings instead of character data (used for VARBINARY, BLOB, or case-sensitive binary text matching)
+
+ZF - Pads empty leading spaces with zeros up to the defined display width (e.g., displaying 7 as 0007).
+
+AI - auto increment  (Automatically generates a sequential integer (+1) for every new inserted row.)
+
+G  - genrated  - (it states for new coloum which we genrated like , we create new coloum for profit as revenue - budget in financials )
+
+*/
 
 
 
+-- ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- SQL class 14 (foriegn key)
+ /*
+
+(movies -> language) defining a relationship 
+=> first click child table then choose relationship and then click parent table 
+01  language_id is forirgn key of movies table becuase language_id is primary key of language table which is refrenced in movie table 
+02 it is one to many relationship , from right(language ) to left (movies) 
+03 -> we choose unidentified one to many relationship because language_id is not a primary key for movies table and we cant identify anything by language_id 
+
+02 can a table have one or more foriegn key ?
+ANS =  
+
+03 
+
+
+04 
+
+ 1) on cascade 
+ 2) on delete
 
 
 
