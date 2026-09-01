@@ -482,6 +482,29 @@ order by movie_count DESC;
 
 ------------------------------------------------------------------------ sheet 2 of workbench starts from here---------------------------------------------------------------
 
+-- Class - 06 
+-- CROSS JOIN  in sql ( IT IS ALSO KNOWN AS CARTESIAN PROJECT 3 ROWS IN TABLE 1 AND 3 ROWS IN TABLE 2 THEN AFTER CROSS JOIN IN FINAL TABLE THERE WILL BE 9  ROWS   )
+-- CROSS JOIN is usefull when we dont have any common coloum in both tables 
+
+USE food_db;
+SELECT *
+FROM items 
+CROSS JOIN variants;
+
+-- but we want full name like sandwich-plain in final , so to do this try googling and then get the concat function related to this 
+SELECT * , concat(name , "-" ,variant_name) as full_name
+FROM items 
+CROSS JOIN variants;
+
+-- now i also want price for full_name as well , so 
+SELECT * , CONCAT(name , "-" ,variant_name) , price + variant_price as final_price
+FROM items 
+CROSS JOIN variants;
+
+-- read about concatination function as well in 
+
+---------------------------------------------------------------------------------------------------------
+
 -- class - 08 ( subqueries )
 # try to select movie with highest imdb rating ( we can do this by order by and limit 1 , but there is othre way too)
 
@@ -797,7 +820,7 @@ unit conversion. Also, you can write this query without CTE as well but you shou
 			on m.movie_id=f.movie_id
 			where release_year>2000 and industry="hollywood"
 	)
-	select * from cte where profit>500
+	select * from cte where profit>500;languages
 
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -895,7 +918,7 @@ G  - genrated  - (it states for new coloum which we genrated like , we create ne
 
 -- ------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- SQL class 14 (foriegn key)
+-- SQL class 14 (foriegn key) 31 aug
  /*
 
 (movies -> language) defining a relationship 
@@ -912,29 +935,116 @@ ANS =
 
 04 
 
- 1) on cascade 
- 2) on delete
+ 1) on delete cascade  = it means on deleting in parent table , entry is also delted in child table 
+ 2) on delete null = it means on deleting in parent table , that entry in child table becomes null 
+ 3) on update cascade = it means the value which is updated in parent table will be simeltaniously updated in child table 
+ 4) on update null = it means on update the value in parent table , the value  became null in child table 
+ 
+ forward enginnering -  by this option we can make the database schema from the ERD diagram .
+ 
+ Reverse Engineering (synchronize function )- by this option we can make the changes in schema by refroming/renovating ERD diagram 
+ 
+*/
+
+-- How to add data in the table 
+
+-- backfilling = Filling missing or newly added column data into existing past rows.
+
+/*
+The Problem: Running a direct full-table UPDATE locks the entire table, causing performance spikes and freezing live applications.
+
+The Solution (Chunking): Updating historical data in small batches (1,000–5,000 rows at a time) using Primary Key ranges with short pauses in between.
+
+Key Rule: Never execute an unbatched mass UPDATE on large production tables.
+*/
+
+-- Import csv from system 
+/* 
+01 first we will import languaes table because it is presnet in movies so before movies we will choose this 
+
+02  choose some a defalut schhemalanguages
+
+03  truncate = empty the table before isertion 
+
+*/
+
+----------------------------------------------------------------------------------------------------------
+-- Sql class 14 (Insertion) 01 sept
+
+insert into movies
+values(default,"bahubali 5","bollywood","2037",null,null,2,null);  -- forgrign key constraint will fail here becuase of we cant give new value to language_id 
+
+-- multiple insertion 
+insert into movies
+  (title , industry , language_id)
+values
+  ("inception 2" , "hollywood" , 5),
+  ("inception 3" , "hollywood" , 5),
+  ("inception 4" , "hollywood" , 5);
+  
+  select * from movies;
+  
+
+select * from my_movies.movies;
+/*
+Insert =  multiple ways to insert in table 
+01) NORMAL directly in table via workbench 
+02) if in schemaa we didnt make it NN , so it is not neccassary to use that colums 
+
+*we have to apply every time to do proper changes because , just on the basis of visiblty of table we cant say anything *
+*/
+
+-------------------------------------------------------------------------------------------------------
+-- Sql class 16 (update and delete )
+
+-- updating single record 
+UPDATE movies
+SET 
+    studio = "warner bros",
+    release_year= 2028
+    where movie_id = 144;
+
+select * from movies;
+
+-- multiple updation 
+-- 01 
+SET SQL_SAFE_UPDATES = 0; -- without this sql will not make you direct chnage in big database 
+UPDATE movies
+SET 
+    studio = "warner bros",
+    language_id =5
+    where title LIKE "%inception%";
+    
+-- 02 safe way 
+select movie_id from movies where title LIKE "%inception%"; -- then use this id for change using IN operator 
+
+select * from movies;
+
+-- DELETE
+delete from movies where movie_id = 145;
+
+-- learn the diffrence between delete , drop and truncate ?
+/*
+delete :Use to selectively remove specific rows while keeping everything else intact.
+truncate : Use to wipe all data and reset a table to a clean state without destroying its schema/structure.
+drop : Use when a table is no longer needed and should be completely removed from the database.
+*/
+
+
+-- quiz learnings 
+/*
+Q5. You are adding a column in your table to store USA phone numbers in this format (732)111-4567 What will be the most appropriate data type for this column?
+
+CHAR(13) - this is ans because char also stores numner and special character 
+VARCHAR(45)
+DOUBLE
+INT
+
+here char(13) is a fix answer because , it has always 13 charcaters not more than that and 
+*/
 
 
 
-
-
-
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
 
 
 
