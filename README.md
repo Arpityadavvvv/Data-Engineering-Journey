@@ -8,3 +8,7 @@ update -
 23 aug  (completed till cross joins) -> 
 24 to 30 Aug (6days gap) -> 
 31 Aug (completed till normalizations)->
+till 2 sept sql was completed 
+
+from 4 sept we will start python 
+
