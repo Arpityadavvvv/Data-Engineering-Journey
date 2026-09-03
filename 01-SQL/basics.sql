@@ -1044,6 +1044,114 @@ here char(13) is a fix answer because , it has always 13 charcaters not more tha
 */
 
 
+--------------------------------------------------------------------------------------------------------
+-- Sql class 17 (Over clause )
+-- over clause = The OVER clause in SQL is used with Window Functions to perform calculations across a specific set of rows (a "window") while retaining all original rows in the result set.
+/*
+diffrence between group by and over clause ?
+GROUP BY vs. OVER()
+GROUP BY: Reduces 100 individual rows into 5 grouped summary rows.
+
+OVER(): Keeps all 100 individual rows and adds the aggregated/calculated value to each row. (it will consider whole table as a window 
+over(partiton by category) = now it will consider windows by diffrent category 
+
+
+Key Components
+PARTITION BY: Divides the query result set into partitions/groups. The window function is calculated separately for each partition.
+
+ORDER BY: Defines the logical order of rows within each partition. Crucial for rankings, running totals, or moving averages.
+*/
+
+select sum(amount)  as total from expenses; -- we only get total sum in one row 
+
+select sum(amount) OVER()  as total from expenses; -- Now here you will get sun but with all rows
+
+select category,sum(amount) as total from expenses  group by category;  -- here you will get sum amount of all category , so three rows cuz only three category there 
+
+select *,sum(Amount) OVER(partition by category order by amount desc ) as total from expenses;   -- here you willl get all rows but total as partioned by category 
+
+select * , sum(amount) OVER(partition by category order by date ) as total_till_date 
+from expenses
+order by total_till_date;
+
+-- Sql class 18 (Rank , dense rank ,row number  )
+/*
+
+Think of these three functions as different ways a school teacher gives out ranks based on exam marks.
+
+The Scenario
+Four students get these test scores:
+
+Rahul: 95 marks
+
+Priya: 85 marks
+
+Amit: 85 marks (Tie with Priya)
+
+Suresh: 75 marks
+
+1. ROW_NUMBER() — The Strict Counter
+It ignores ties completely and just counts rows 1, 2, 3, 4 like giving out serial numbers.
+
+Rahul: 1
+
+Priya: 2
+
+Amit: 3
+
+Suresh: 4
+
+Rule: Every row gets a unique number, even if scores are identical.
+Best For: Deduplicating data or giving each row a unique sequence number.
+
+2. RANK() — Standard School Ranking
+If two students tie for 2nd place, both get 2nd place. But the next rank (3rd) is skipped because two people took up 2nd place.
+
+Rahul: 1
+
+Priya: 2
+
+Amit: 2
+
+Suresh: 4 (Rank 3 is skipped!)
+
+Rule: Ties get the same rank, gaps are left in the numbers.
+Best For: Official leaderboards, sports competitions, or exam results.
+
+3. DENSE_RANK() — Compact Ranking (No Gaps)
+Works like RANK(), but never skips numbers. It ranks unique levels/tiers rather than rows.
+
+Rahul: 1
+
+Priya: 2
+
+Amit: 2
+
+Suresh: 3 (No gaps!)
+
+Rule: Ties get the same rank, no numbers are skipped.
+Best For: Finding "Top 3 highest budgets" or "Top 3 highest salaries", where equal values should count as a single tier.
+
+*/
+select * , 
+row_number() over (partition by category order by amount desc) as rn , -- it will do in order 1,2,3,4
+rank() over( partition by category order by amount desc) as rr  ,-- it will do in order 1,2,2,4
+dense_rank() over(partition by category order by amount desc) as dr -- it will do in order 1,2,2,3
+from expenses;
+
+-- by using CTE 
+with cte1 as (
+select * , 
+row_number() over (partition by category order by amount desc) as rn , -- it will do in order 1,2,3,4
+rank() over( partition by category order by amount desc) as rr  ,-- it will do in order 1,2,2,4
+dense_rank() over(partition by category order by amount desc) as dr -- it will do in order 1,2,2,3
+from expenses
+order by category
+)
+select * from cte1 where rn>=3;
+
+
+
 
 
 
