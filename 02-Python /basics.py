@@ -212,6 +212,124 @@ dir(items) #all the mehtods avilable for list
 
 items.clear() # it will clear all the items 
 
+Q7.
+What will be the output of the following code?
+
+lst = [1, [2, 3], 4, [5, [6, 7]]]
+print(lst[3][1][0])
+# ouput is 6
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 05 (if - else) 11 sept 2026 
+
+# Taking input from user ( we have to specify the input because of type casting )
+from email import message
+
+# n = input("enter number here ")  (it will give error)
+
+n = int(input("enter number here "))   # Yes, input() always returns a string (str) by default. What you type: 25 -> What Python receives: "25" (String)
+print(type(n))
+if n%2 == 0 :
+     print("even number")
+else:
+     print("odd ")
+
+# short way
+message = "number is even" if n%2 ==0  else "number is odd"
+
+#reverse way
+m= int(input("enter number here "))
+if not n%2 == 0 :
+     print("odd number")
+else:
+     print("even")
+
+
+x=10
+if x>10 and x%2==0 :   # try with OR , AND
+    print("yay")
+else :
+    print("no")
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class -06 (loops)
+
+ expenses = [1000 , 1200 ,2000 ,5000]
+ total_expense = 0
+#
+#  way -01
+for expense in expenses :
+  total_expense += expense
+  print(total_expense)
+
+# way -02
+for i in range(len(expenses)) :
+    expense = expenses[i]
+    print(f" month {i} ->  {expense}" )
+    total_expense += expense
+
+#way -03
+for i , expense in enumerate(expenses) :
+    print(f" month {i} ->  {expense}")
+    total_expense += expense
+#
+# break in loops
+monthly_Sales = [42 , 34 , 33 , 38 ,40 ,45]
+threshold = 35
+
+for sales_amount in monthly_Sales :
+    if sales_amount < threshold :
+        print(f"sales amount {sales_amount} is lesser than threshold")
+        break
+    else:
+        print(f" {sales_amount} is greater than ")
+
+
+# using zip ( enumerate() pairs index numbers with items from one list, zip()
+# pairs corresponding elements from multiple lists based on their position.)
+# monthly_Sales = [42 , 34 , 33 , 38 ,40 ,45]
+# threshold = 35
+# months = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
+#
+# for sales_amount , month in zip (monthly_Sales ,months):
+#     print(month,sales_amount)
+
+
+
+# using continue
+
+for i in range (1,11):
+    if i%2 == 0 :
+        continue
+    else :
+        print(i)
+
+# we can use else with for loop , but it only means that after completing the for loop the execution goes to else
+
+
+# nested loops
+products = ["iphone",'ipad','macbook']
+regions = ["usa",'ind','uk']
+revenue = [20,23,45,56,12,34,13,44,34,31,39]
+
+i=0
+for product in products :
+    for region in regions :
+        rev = revenue[i]
+        i=i+1
+        print(f"{product} -> {region} -> {rev}")
+
+
+# thislist = ["apple", "banana", "cherry"]
+# tropical = ["mango", "pineapple", "papaya"]
+# thislist.extend(tropical)
+# print(thislist)
+
+
+
+
+
+
 
 
 
