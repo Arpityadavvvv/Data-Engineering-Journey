@@ -165,6 +165,54 @@ nw
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+# class - 04 (list)
+
+# list is something array , but in python list in not homogenious which means we can have diffrent data type in same lists 
+
+# syntax of list 
+items = ["bread" , "jam" , "essence" , "milk" , "water"] 
+items
+# output = ['bread', 'jam', 'essence', 'milk', 'water']
+
+items[0] # bread
+items[0:2]  # using slice operator output = bread , jam 
+
+# append 
+items.append("butter") # insertion at last ['bread', 'jam', 'essence', 'milk', 'water' , 'butter']
+
+# remove 
+items.remove("butter") # remove from last 
+
+# insertion at particular position 
+items.insert(1,"butter") # (index where u want to insert , what you want to insert )
+
+
+# checking 
+'rice' in items  # false 
+
+expenses = [2000 , 190 , 40 , 300 , 498]
+
+expenses.sort() # this will sort the given order 
+expenses.sort(reverse = True) # this will reversed the sorted order 
+expenses
+
+
+bakery = ['biscuit' , 'sprite']
+
+# we can add both array by just + operatr 
+
+bakery_items = bakery + items
+
+bakery_items.sort() # Python compares the strings character by character, starting from the first character , A space comes before letters in the character ordering, so ' cheese' gets placed first.
+
+bakery_items # [' cheese', 'almonds', 'biscuit', 'bread', 'jam', 'sprite']
+
+len(items) # size of array 
+dir(items) #all the mehtods avilable for list 
+
+items.clear() # it will clear all the items 
+
+
 
 
 
