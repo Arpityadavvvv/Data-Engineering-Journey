@@ -325,11 +325,255 @@ for product in products :
 # thislist.extend(tropical)
 # print(thislist)
 
+# -------------------------------------------------------------------------------------------------------------------------------------------
+# class = 07 (functions)
+
+'''
+important points
+
+01 function = In Python, a function is defined using the def keyword
+->The code inside the function must be indented. Python uses indentation to define code blocks.
+
+02 function name rules -> Function names are case-sensitive (myFunction and myfunction are different)
+
+03 function return -> If a function doesn't have a return statement, it returns None by default.
+
+04 pass statment -> Function definitions cannot be empty. If you need to create a function placeholder without any code, use the pass statement:
+-> Function definitions cannot be empty. If you need to create a function placeholder without any code, use the pass statement:
+
+05 -> parameter vs argument
+
+From a function's perspective:
+
+A parameter is the variable listed inside the parentheses in the function definition.
+
+An argument is the actual value that is sent to the function when it is called.
+
+def my_function(name): # name is a parameter (because it can be a variable)
+  print("Hello", name)
+
+my_function("Emil") # "Emil" is an argument (because it is exact name )
+
+If your function expects 2 arguments, you must call it with exactly 2 arguments.
+
+06 -> positional vs keyword arguments
+
+positional -> just a nomral arguments , order is important here
+keyword -> key - value pair arguments , in this order is not important
+
+ou can mix positional and keyword arguments in a function call.
+
+However, positional arguments must come before keyword arguments:
+
+'''
+
+# function for finding a volume of cylinder
+
+def vol_cylinder (radius, height):
+    vol = 3.14* (radius**2) * height
+    print(f"volume of given cylinder with radius {radius} and height {height} is : {vol}")
+    return vol
+
+vol_cylinder(10,7)
+
+# if i use extra parameter than givne (it will give error to them)
+# vol_cylinder(10,7,4)
+
+# if i use less parameter than given ( it will give error of missing argument)
+# vol_cylinder(10)
+
+# this is positional argument so you have to be careful about order of agrument first radius -> then height
+
+# here we use keyword argument
+def vol_keyword (rad , hei=7 ) :
+    vol = 3.14 * (rad ** 2) * hei
+    print(f"volume of given cylinder with radius {rad} and height {hei} is : {vol}")
+    return vol
+
+vol_keyword(hei=7 , rad = 10) # here we shuffled the order but it will run fine
+
+vol_keyword(rad=7)  # it will use default argument , if we didnt give them a height
+
+# if we are not sure how many argument it will take
+def sum_all (*args) :  # by writing this *args i specified that , it can have any number of argument
+    total = 0
+    for num in args :
+        print(num)
+        total += num
+    print(total)
+    return total
+
+sum_all(1,2,3,4,5,6,7,8)
+
+
+# using kwargs
+# suppose i want to give this argument company_info (name='resurgence pvt ltd' , valuation ='2000 bd' , revenue= 50 crd) , and i can add anyhting new in this
+
+def company_info (**kwargs) :
+    for info in kwargs :
+        print(info ,":->", kwargs[info])
+
+company_info (name='resurgence pvt ltd' , valuation ='2000 bd' , revenue= 50)
+# now i wanna add new details in arguments
+
+company_info (name='resurgence pvt ltd' , valuation ='2000 bd' , revenue= 50 , product='AI-SOFT-ELC')
 
 
 
+# using lamba expression (lambda expression is a quick way to define a function in a single line )
+# def sqr (x)
+#     return x**2
+
+# now by using lamda expression
+x= lambda a : a*a   #lambda input :  return output
+print(x(5))
+
+y = lambda a,b : a+b
+print(y(2,3))
+
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 08 (tuples )
+# tuples are collection of ordered elements , tuple is immutable
+# we cannot change directly in the tuples
+
+points_2d = (2,3)
+points_3d = (3,4,5)
+
+def find_pe_pb_Ratio (price ,eps ,book_value) :
+    pe = price/eps
+    pb = price/book_value
+    return pe,pb  # we can return multiple values in python as a list
 
 
+# this is called unpacking
+pe_ratio,pb_ratio = find_pe_pb_Ratio(3,4,5)
+print(pe_ratio)
+print(pb_ratio)
+
+
+# Note: The number of variables must match the number of values in the tuple, if not, you must use an asterisk to collect the remaining values as a list.
+
+
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 09 (dictionary)
+# In python dictionary is a implementation of hashmap
+# lets assume there is a list of tuples
+contcts = [('arpit','ind'),('sharon','uk'),('alice','can')]
+
+# now we will dictionary of this
+
+d = {
+    'arpit':'ind',
+    'sharon':'uk',
+    'alice':'can'
+}
+
+print(d)
+print(type(d))
+
+# accesing
+print(d['arpit'])
+
+# to get all keys
+x = d.keys()
+print(x)
+
+y = d.values()
+print(y)
+
+z= d.items()
+print(z)
+
+d.get('aaditya',-1)  # this will not throw error , just simply return none
+#d['aaditya']  # this will definelty give error
+
+# adding
+d['bitto'] = 'dewas'
+print(d)
+
+# using IN operator
+print('bitto' in d)  # this will return true
+print('aadi' in d) # this will return false
+
+# using for loop (only keys)
+for name in d :
+    print(name)
+
+# this will return both keys and values
+for name,number in d.items() :
+    print(name,number)
+
+d.keys()
+d.values()
+d.items()
+
+# we can have nested dictionary as well
+apple_revenues = {
+    'usa' : { "iphone":20,
+             'ipad':4,
+             'iwatch':10
+           },
+
+
+    'ind' : {'iphone': 24,
+             'ipad': 25,
+             'iwatch':23
+            }
+
+
+}
+
+for country,product_Data in apple_revenues.items() :
+    for product,rev in product_Data.items():
+        print(f"{country} {product}")
+
+
+
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 10 (file handling)
+# file handling 
+f = open('funny.txt' ,'r')
+
+for line in f:
+    print(line)
+
+# using with it works as context 
+with open('funny.txt','r') as f:  # here you dont have to close it , it will automaticlly got closed after executiow
+    for line in f:
+        print(line)
+
+with open('funny.txt', 'a') as f  :
+ f.write("i am feeling so sad and sleepy")
+
+player_scores = {}
+with open ('scores.csv','r') as fl:
+    for line in fl:
+        player , _,score = line.split(",")   # humne value nikali hai yha se 
+        score = int(score.strip())
+        if player in player_scores :   # if player is already in that , just apeend its scores 
+            player_scores[player].append(score)
+        else :
+            player_scores[player] = [score]
+           
+        
+player_scores
+
+''' 
+{'rohit': [9, 120, 105, 140, 130],
+ 'shakib': [56, 78, 102, 72],
+ 'babar': [56, 45, 120, 5, 67]}
+'''
+
+for player ,score_list  in player_scores.items() :
+    min_score = min(score_list)
+    max_score = max(score_list)
+    print(f"{player} {min_score} {max_score}")
+
+''' output 
+rohit 9 140
+shakib 56 102
+babar 5 120
+'''
 
 
 
