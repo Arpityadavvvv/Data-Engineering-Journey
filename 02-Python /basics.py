@@ -576,6 +576,50 @@ babar 5 120
 '''
 
 
+''' 
+file handling questions with solutions for understanding 
 
 
+
+
+Task 1
+You are given a file called customers.txt that contains the name of the customer and total amount they spent. Read this file line by line and save the customer name and total amount in a dictionary.
+
+For example, customers.txt file will content the data in the following format,
+
+Srinivas,120
+John,250
+Maria,150
+Smith,510
+Anjali,45
+You will read this and build a dictionary like this,
+
+{
+    "Srinivas": 120,
+    "John": 250,
+    "Maria": 150,
+    "Smith": 510,
+    "Anjali": 45
+}
+
+solution ->
+
+d = {}
+with open ('customers.txt','r') as f :
+   for line in f :
+       name , amount = line.split(',')
+       d[name] = int(amount.strip())
+
+print(d)
+
+
+Step 1 (Line lao): for line in f: File se ek raw text line uthao ("Srinivas,120\n").
+Step 2 (Clean karo): line.strip() Clean textual line banao ("Srinivas,120")
+.Step 3 (Tukde karo): .split(',') Comma se tod do ("Srinivas" aur "120").
+Step 4 (Dict me dalo): d[name] = int(amount) Key-value pair bana kar type convert karo.
+
+
+
+'''
+# 
 
