@@ -12,5 +12,6 @@ till 2 sept sql was completed
 
 from 4 sept we will start python 
 till 7th sept completed ( numbers , strings )
+8 sept to 15th sept -> (completed pyhton till exceptional handeling)
 
 
