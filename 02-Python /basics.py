@@ -670,3 +670,167 @@ Step 4 (Dict me dalo): d[name] = int(amount) Key-value pair bana kar type conver
 'r' (Read) -> Reads existing content
 'w' (Write) -> Erases/Overwrites all existing content	
 'a' (Append)-> Preserves existing content; adds to en
+'''
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 11 (classes)
+# syntax of defining a class
+import datetime
+class cricket_player:
+    team_Size = 11    # this is for every one
+    def __init__(self,fname,lname,birth_year,team):
+        self.first_name = fname
+        self.last_name = lname
+        self.birth_year = birth_year
+        self.team = team
+        self.scores = []
+
+
+    def add_Scores (self,score):
+     self.scores.append(score)
+
+    def get_avg (self):
+     return sum(self.scores)/len(self.scores)
+
+    def get_age (self) :
+     now = datetime.datetime.now() # this is how you calculate current year
+     return now.year - self.birth_year
+
+    # this is function thorugh which we can represent object in string
+    def __str__(self):
+       return f"{self.first_name} {self.last_name} ,the cricket player from {self.team}"
+
+virat = cricket_player("virat","virat",1999,'IND')
+virat.add_Scores(27)
+virat.add_Scores(149)
+virat.add_Scores(87)
+
+print(virat.get_age())
+print(virat.get_avg())
+
+
+# example - 02
+
+class Student:
+    # Constructor: Runs when an object is created
+    def __init__(self, name, age, marks):
+        self.name = name     # Attribute
+        self.age = age       # Attribute
+        self.marks = marks   # Attribute
+
+    # Method: Action that the object can perform
+    def display_info(self):
+        return f"Student: {self.name}, Age: {self.age}, Marks: {self.marks}"
+
+    def is_passed(self):
+        return self.marks >= 40
+
+
+# Creating Objects (Instances of Class Student)
+s1 = Student("Srinivas", 22, 85)
+s2 = Student("Rahul", 21, 35)
+
+# Accessing Attributes and Methods
+print(s1.display_info())  # Output: Student: Srinivas, Age: 22, Marks: 85
+print(s1.is_passed())     # Output: True
+print(s2.is_passed())     # Output: False
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class -12 (exceptional handelling)
+# if on any line , code gets exception then the code below that line will not be executed
+# so we have to handle this exception using try and except
+
+x= input("enter a number")
+y = input("enter a number")
+
+ans = 0
+ans_2 = 0
+try:
+    ans = int(x)/int(y)
+    ans_2 = 'hellow' + 18
+
+except ZeroDivisionError as ze:
+    print('exception occured : ', ze)
+
+except TypeError as te:
+    print('exceptions occured :',  te)
+
+#If you don't know the exact error type in advance, you can catch the generic Exception object to get its details
+except Exception as e:  # this is actualy genric expections , it can handle anything if we forget to specify  , but as a good data engineer use specific exception
+    print('exeption occured :' , e)
+
+
+
+
+# finally => finally will get executed no matter what , even if exeption comes or not
+finally:
+    print('i will be executed at any situation')
+
+balance = 0
+def deposit(amount):
+    global balance
+    if amount <= 0:
+        raise ValueError('amount must be greater than 0') #You can trigger an error intentionally using the raise keyword when custom conditions aren't met:
+    balance += amount
+
+deposit(100)
+print(balance)
+
+def credit (amount):
+    global balance
+    if amount>balance :
+        raise ValueError('insuffcient funds')
+    balance = balance - amount
+
+credit(120)
+print(balance)
+
+
+# exercise questions of oops soltuion 
+'''
+# 1. Base Parent Class
+class LibraryItem:
+
+    def __init__(self, title, is_borrowed=False):
+        self.title = title
+        self.is_borrowed = is_borrowed
+
+    def borrow_item(self):
+        if self.is_borrowed:
+            raise Exception(f"The item '{self.title}' is already borrowed.")
+        else:
+            self.is_borrowed = True
+            print(f"Successfully borrowed '{self.title}'.")
+
+
+# 2. Child Class (Book)
+class Book(LibraryItem):
+
+    def __init__(self, title, author, is_borrowed=False):
+        super().__init__(title, is_borrowed)
+        self.author = author
+
+
+# 3. Task 4 Execution
+# Step A: Object creation
+book_1 = Book("Jeet Aapki", "Shiv Kheda", is_borrowed=False)
+
+# Step B: First borrow attempt (Succeeds)
+print("--- First Attempt ---")
+try:
+    book_1.borrow_item()
+except Exception as e:
+    print("Error:", e)
+
+# Step C: Second borrow attempt (Triggers Exception)
+print("\n--- Second Attempt ---")
+try:
+    book_1.borrow_item()
+except Exception as e:
+    print("Caught Exception successfully:", e)
+
+'''
+
+
+
+
