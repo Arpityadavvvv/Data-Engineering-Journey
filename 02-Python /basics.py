@@ -395,8 +395,8 @@ vol_keyword(hei=7 , rad = 10) # here we shuffled the order but it will run fine
 vol_keyword(rad=7)  # it will use default argument , if we didnt give them a height
 
 # if we are not sure how many argument it will take
-def sum_all (*args) :  # by writing this *args i specified that , it can have any number of argument
-    total = 0
+def sum_all (*args) :  # by writing this *args i specified that , it can have any number of argument                   
+    total = 0          # When you want a function to handle any number of inputs (e.g., adding numbers, concatenating strings)
     for num in args :
         print(num)
         total += num
@@ -409,7 +409,8 @@ sum_all(1,2,3,4,5,6,7,8)
 # using kwargs
 # suppose i want to give this argument company_info (name='resurgence pvt ltd' , valuation ='2000 bd' , revenue= 50 crd) , and i can add anyhting new in this
 
-def company_info (**kwargs) :
+def company_info (**kwargs) :   # When you want to pass named properties without predefining every single parameter in the function header.
+Python
     for info in kwargs :
         print(info ,":->", kwargs[info])
 
@@ -419,6 +420,8 @@ company_info (name='resurgence pvt ltd' , valuation ='2000 bd' , revenue= 50)
 company_info (name='resurgence pvt ltd' , valuation ='2000 bd' , revenue= 50 , product='AI-SOFT-ELC')
 
 
+# f you use standard positional arguments, *args, and **kwargs together, Python requires them to be in this exact order:
+# Python
 
 # using lamba expression (lambda expression is a quick way to define a function in a single line )
 # def sqr (x)
@@ -446,6 +449,9 @@ def find_pe_pb_Ratio (price ,eps ,book_value) :
 
 
 # this is called unpacking
+# Function Call karte waqt (Unpacking):
+# *my_list ya *my_tuple kisi list/tuple ko khol kar individual values me spread kar deta hai
+# **my_dict kisi dictionary ko khol kar individual key=value arguments me spread kar deta hai.
 pe_ratio,pb_ratio = find_pe_pb_Ratio(3,4,5)
 print(pe_ratio)
 print(pb_ratio)
@@ -529,6 +535,43 @@ for country,product_Data in apple_revenues.items() :
 
 
 
+# example for using both args and kwrgs 
+'''
+def make_pizza(size, *toppings, **order_details):
+    print(f"Pizza Size: {size}")
+    
+    print("\nToppings (*args packed as Tuple):")
+    for topping in toppings:
+        print(f" - {topping}")
+        
+    print("\nOrder Details (**kwargs packed as Dict):")
+    for key, value in order_details.items():
+        print(f" - {key}: {value}")
+
+
+# Function Call
+make_pizza(
+    "Large",                                   # 1. Standard Argument
+    "Pepperoni", "Mushrooms", "Extra Cheese",   # 2. *args (Positional values)
+    customer="Srinivas", address="Indore", pay_mode="UPI" # 3. **kwargs (Key=Value pairs)
+)
+
+'''
+# output
+# Pizza Size: Large
+
+# Toppings (*args packed as Tuple):
+#  - Pepperoni
+#  - Mushrooms
+#  - Extra Cheese
+
+# Order Details (**kwargs packed as Dict):
+#  - customer: Srinivas
+#  - address: Indore
+#  - pay_mode: UPI
+
+
+
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # class - 10 (file handling)
 # file handling 
@@ -542,7 +585,7 @@ with open('funny.txt','r') as f:  # here you dont have to close it , it will aut
     for line in f:
         print(line)
 
-with open('funny.txt', 'a') as f  :
+with open('funny.txt', 'a') as f  : # here i am appending something 
  f.write("i am feeling so sad and sleepy")
 
 player_scores = {}
@@ -623,3 +666,7 @@ Step 4 (Dict me dalo): d[name] = int(amount) Key-value pair bana kar type conver
 '''
 # 
 
+'''
+'r' (Read) -> Reads existing content
+'w' (Write) -> Erases/Overwrites all existing content	
+'a' (Append)-> Preserves existing content; adds to en
