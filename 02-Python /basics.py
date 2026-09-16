@@ -831,6 +831,51 @@ except Exception as e:
 
 '''
 
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 13 (pandas library , dataframe)
+import pandas as pd # pandas is widely used by data analysts , data sceintists
+
+df = pd.read_csv('movies.csv')
+print(df) 
+
+df.head(5)
+df.tail(3)
+df[2:6]
+
+# for avg imdb reading 
+df.imdb_rating  # it is series 
+
+df.imdb_rating.min(),  df.imdb_rating.max() , df.imdb_rating.mean() # we can do many operations 
+
+# for only bollywood industry (understand syntax through gpt)
+df_b = df[df.industry == "Bollywood"]
+df_h = df[df.industry == "Hollywood"]
+
+df_b.imdb_rating.min() , df_h.imdb_rating.max()
+
+''' data frame basics use from here '''
+
+df.columns # it will tell you all coloum of data frame 
+
+df.industry.unique() # for how many industry in it 
+
+df.language.unique() 
+
+mvd = df['language'].unique()
+
+df.industry.value_counts()
+
+# how many movies are there for each of these languages 
+df.language.value_counts()
+
+# subset of data set (coloum fitering)
+df_subset = df[["title","language","imdb_rating","industry"]]  # this is how we can get the subset of our data frame , if we want to work on it we can save it in diffrent varialble
+
+# we want movies which have release_year should be greater than 2000
+df[df.release_year>2000]
+
+
+
 
 
 
