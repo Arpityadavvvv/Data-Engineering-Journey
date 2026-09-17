@@ -833,6 +833,18 @@ except Exception as e:
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # class - 13 (pandas library , dataframe)
+
+'''
+import pandas as pd
+
+df = pd.read_csv('data.csv')  # Loads CSV file into a DataFrame
+
+df.head(5)                    # Views the first 5 rows
+df.info()                    # Displays column names, non-null counts, and dtypes
+df.describe()                # Calculates mean, std, min, max, and quartiles for numeric columns
+df.shape                     # Returns (rows, columns) tuple
+
+'''
 import pandas as pd # pandas is widely used by data analysts , data sceintists
 
 df = pd.read_csv('movies.csv')
@@ -874,8 +886,203 @@ df_subset = df[["title","language","imdb_rating","industry"]]  # this is how we 
 # we want movies which have release_year should be greater than 2000
 df[df.release_year>2000]
 
+# we want movies which have release_year should be between 2000 and 2010
+df[(df.release_year>2000) & (df.release_year<2010)]
+
+# WANT to see only marvel movies 
+df[df.studio == "Marvel Studios"]  # row level filtering 
+
+df.describe()  # this actually give us the basic analytics of our dataframe 
+
+df.info() # give us infor about our dataframe , how many colums and all 
+
+# movie with max rating 
+df[df.imdb_rating == df.imdb_rating.max()]
+
+'''
+# bollywood movie  with highest rating 
+# df[ df.imdb_rating == df.imdb_rating.max() & df.industry == 'bollywood'] (wrong )
+
+# way -01 
+#ntop_movie = df[(df.industry == 'bollywood') & (df.imdb_rating == df[df.industry == 'bollywood'].imdb_rating.max())]
+
+# way -02  using subset  
+bwd = df[df.industry == 'Bollywood'] # created a subset from dataframe
+BMV = bwd[bwd.imdb_rating == (bwd.imdb_rating.max())] # now filtering the row 
+BMV.head(1)
+'''
+
+df[(df.imdb_rating == df.imdb_rating.max()) | (df.imdb_rating == df.imdb_rating.min())]
+
+# we want to calculate the age of the movie 
+# relase_year - current_year
+# we can use diffrent ways for it 
+
+#way -01 ( adding the new coloum )
+df['age'] = df['release_year'].apply(lambda x : 2026-x)  
+df.head(10)
+
+# way -02 
+def calculate_age(release_year):
+    return 2026 - release_year
+# Step 2: Pass the function name to .apply()
+df['age'] = df['release_year'].apply(calculate_age)   # this apply function works as loop , and works as row by row 
+df.head(10)
+
+# way -03
+df['age'] = 2026 - df['release_year']
+df.head(10)
 
 
+# now we want to calculate profit 
+# way -01  
+df['profit'] = df.apply(lambda x : x['revenue'] - x['budget'] , axis=1) # axis=1 means going row by row 
+df.head(4)
 
+# way -02
+def calprf (budget,revenue):
+    return revenue-budget
+df['profit'] = calprf(df['budget'],df['revenue'])
+df.head(4)
+
+# we will study about index 
+df.index  # it will show you the index from where to where 
+
+# now if we want to change the index
+df.set_index("title",inplace = True) # this inplace true depict that it will change in df 
+df.index
+
+df.head(3) # without changing index it has s.no but after changing index it has starting from titledf
+
+df.loc['Pather Panchali']  # uou will get info of a row as a hashmap or you can say as a disctionary fromat  , but we can only do this by after setting an index
+
+df.loc[["Pather Panchali","Doctor Strange in the Multiverse of Madness"]]  # for multiple index 
+
+df.iloc[0] # it is integer based loacation
+df.iloc[2:5]
+
+df.reset_index(inplace=True)
+df.head(4)
+
+'''
+doubts for single bracket or double bracket 
+
+01 You are selecting only one column to perform simple math or series operations.
+# Returns a Series
+max_rating = df['imdb_rating'].max()
+df['age'] = 2026 - df['release_year']
+
+02 Use Double Brackets df[['col1', 'col2']] when: You need to select two or more columns at the same time.
+# Must use double brackets for multiple columns
+df_subset = df[['movie_title', 'industry', 'imdb_rating']]
+
+03 You are selecting one column, but you want the result to stay formatted as a DataFrame table rather than a Series array.
+# Returns a 1-column DataFrame instead of a Series
+df_table = df[['imdb_rating']]
+
+'''
+# ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 14 (reading csv files)
+
+'''
+     format    Read function         write function                                       Best used for 
+     
+01   CSV	     pd.read_csv()	       df.to_csv('file.csv', index=False)	               Plain text, universal compatibility
+
+02   Excel     pd.read_excel()	  df.to_excel('file.xlsx', sheet_name='Sheet1')	     Spreadsheets (.xlsx)
+
+03   JSON	     pd.read_json()	       df.to_json('file.json')	                         Web APIs and nested data
+
+
+Exporting Clean Data
+When exporting DataFrames back to disk, set index=False to prevent Pandas from writing the default integer row numbers into your output file as an extra column:
+Python
+
+'''
+
+import pandas as pd
+df = pd.read_csv("stock_data.csv")
+
+df = pd.read_csv("stock_data.csv",skiprows=1)  #we can skip rows from here 
+
+df = pd.read_csv('stock_data.csv', header=1, names = ["symbol","eps","price","people"]) # we can change the name of coloum
+
+# this is for specific value 
+# here we provide a dictionary for specific value 
+df = pd.read_csv('stock_data.csv', header=1, nrows=4 , na_values = {
+    'eps':['not available'],
+    'revenue':[-1],
+    'people':['n.a.']
+})# nrows => it shows only goals ]m 
+
+
+# we can use this for every one 
+df = pd.read_csv('stock_data.csv', header=1, na_values = ['not available',-1,'n.a.'])  # isme jha jha yeh aise rhengi wo NAN hojaygi
+
+# now we are changing in file and export it as csv
+# let say manager said to you that , can you calculate pe ratio coloum
+df['pe'] = df['price']/df['eps']
+
+# now we want to export this change into real csv file 
+df.to_csv('pe.csv') # in your python.main folder your new file is saved 
+
+# df.to_csv('pe.csv', index= False , header=False) # by index=0 (your serial no is removed) and by header=false (header is removed)
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 15 ( reading excel files)
+# for reading exel file , we need to run this command " pip install openpyxl" in your bash terminal
+
+'''
+Writing Data to Excel (to_excel)
+A. Writing a Single DataFrame
+
+# Save DataFrame to a single sheet without writing row numbers
+df.to_excel('clean_movies.xlsx', sheet_name='Top_Movies', index=False)
+
+B. Writing Multiple DataFrames to Multiple Sheets (pd.ExcelWriter)
+To write multiple DataFrames into a single Excel workbook with multiple tabs, use the pd.ExcelWriter() context manager
+
+ Handling Sheets
+Unlike CSVs (which only store 1 flat table per file), Excel workbooks contain multiple tabbed sheets.
+
+# Create an ExcelWriter object
+with pd.ExcelWriter('company_report.xlsx', engine='openpyxl') as writer:
+    df_bollywood.to_excel(writer, sheet_name='Bollywood', index=False)
+    df_hollywood.to_excel(writer, sheet_name='Hollywood', index=False)
+    df_summary.to_excel(writer, sheet_name='Summary_Stats')
+
+'''
+
+df_movies = pd.read_excel("movies-db.xlsx", "movies")  #excel file is movies-db , and in that files we are opening movies
+df_movies.head(5)
+
+df_financials = pd.read_excel("movies-db.xlsx", "financials")  #excel file is movies-db , and in that files we are opening financials
+df_financials .head(6)
+
+
+'''
+# after below i am updating my functions 
+def currencychanger (curr):
+    if curr == "INR":
+        return "USD"
+    else
+       curr
+
+
+df_actors = pd.read_excel("movies-db.xlsx", "financials", convertors = {
+'currency': currencychanger
+}) 
+
+'''
+# read about pandas excel read documentation 
+
+df_actors = pd.read_excel("movies-db.xlsx", "actors")  #excel file is movies-db , and in that files we are opening actors
+df_actors .head(4)
+
+df_merged = pd.merge(df_movies ,df_financials, on="movie_id" )
+
+with pd.ExcelWriter("movie_final.xlsx") as writer:
+    df_financials.to_excel(writer , sheet_name='financials')
+    df_movies.to_excel(writer , sheet_name='movies')
 
 
