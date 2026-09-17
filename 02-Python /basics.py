@@ -673,7 +673,7 @@ Step 4 (Dict me dalo): d[name] = int(amount) Key-value pair bana kar type conver
 '''
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# class - 11 (classes)
+# class - 11 (classes (important))
 # syntax of defining a class
 import datetime
 class cricket_player:
@@ -997,6 +997,25 @@ df_table = df[['imdb_rating']]
 Exporting Clean Data
 When exporting DataFrames back to disk, set index=False to prevent Pandas from writing the default integer row numbers into your output file as an extra column:
 Python
+
+Question2
+Add a new column "year_classify" to the above dataframe.
+If release_year is less than 2000, then 'before 2000' or else 'From 2000'
+
+ANSWER:
+
+#add the column "year_classify"
+df['year_classify'] = ""
+
+def filling (year):
+    if year<2000:
+        return 'before 2000'
+    else:
+        return 'From 2000'
+
+#show the df
+df['year_classify'] = df['release_year'].apply(filling)
+df
 
 '''
 
