@@ -1104,4 +1104,48 @@ with pd.ExcelWriter("movie_final.xlsx") as writer:
     df_financials.to_excel(writer , sheet_name='financials')
     df_movies.to_excel(writer , sheet_name='movies')
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 16 (handelling null values)
 
+df = pd.read_csv('weather_data.csv',parse_dates=['day']) # also i want to convert day coulum which is in string to date
+
+df.set_index('day',inplace = True)  # inplace => true (it will change in df insted of new one )
+
+# now we have to repalce null value with na 
+df.fillna(0,inplace=True) # we have to use inplace because if didnt use inplace it will chnage but not in this dataframe , it will change in new data frame
+
+df = pd.read_csv("weather_data.csv",parse_dates=["day"])
+
+df.set_index("day", inplace=True)
+
+# now we will remove nan with 0 
+# df.fillna(0) with this all NAN value got 0
+df.fillna({
+    'temperature' : df.temperature.mean(),  # jha jha bhi temoreature null hoga wha yeh lgjayga only 
+    'windspeed': df.windspeed.mean()       #  windspeed bhi null ki g == jgh ye update hota hege 
+    
+})
+
+df.ffill() # it means jha NAN hoga , wha usse phele jo value hai wo copy hojaygi  it is called forward fill
+
+df.bfill() # we can use axis also using coloum and row
+
+# we can use interpolate method to fill NAN values with value related value 
+df.interpolate(numeric_only = 'True') # some problem here 
+
+# drop na => we can direclty dropping the NAN value 
+#df.dropna() # it will somehow drop all NAN
+# df.dropna(how ="all") # drop when all colum has Nan
+# df.dropna(how ="any") # drop NAN if any coloum of tht row is nan
+
+df.dropna(thresh = 2) # threshold means here in any coloum if 2 nan values is there i will drop them and if one value is NAN then dont drop , threshhold is atleast 2 
+
+df.replace(32.0,000)
+
+import numpy as np
+df.replace ({
+    
+    'temperature': 32.0,  # in temp coloum , i want 32.0 will be replaced 
+    'windspeed': 9.0,    # in windspeed , i want 9.0 will be replaced 
+    'event': 'no event'
+},np.nan) # np.nan means i want to replace this all with nan 
