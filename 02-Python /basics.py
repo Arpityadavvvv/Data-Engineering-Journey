@@ -1149,3 +1149,149 @@ df.replace ({
     'windspeed': 9.0,    # in windspeed , i want 9.0 will be replaced 
     'event': 'no event'
 },np.nan) # np.nan means i want to replace this all with nan 
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 17 (concat and merge )
+
+# creating the dataframe
+india_weather = pd.DataFrame({
+    "city": ["mumbai","delhi","banglore"],
+    "temperature": [32,45,30],
+    "humidity": [80, 60, 78]
+})
+india_weather
+
+# creating the dataframe 
+us_weather = pd.DataFrame({
+    "city": ["new york","chicago","orlando"],
+    "temperature": [21,14,35],
+    "humidity": [68, 65, 75]
+})
+us_weather
+
+
+# now we want to join 
+# row wise concatination 
+
+#  01 pd.concat => Use this if you are not matching rows on a key, but instead want to glue them together side-by-side or stack them vertically.
+nwdf = pd.concat([india_weather,us_weather])
+# here in result u see , in index there is 012, then again 012 so , if you want to remove it 
+nwdf = pd.concat([india_weather,us_weather],ignore_index = True) # here index is properly 012345
+nwdf
+
+
+# we can also specify keys (it is very usefull)
+nwdf = pd.concat([india_weather,us_weather],keys=['india','us'])
+nwdf
+
+temperature_df = pd.DataFrame({
+    "city": ["mumbai","delhi","banglore"],
+    "temperature": [32,45,30],
+}, index=[0,1,2])
+temperature_df
+
+windspeed_df = pd.DataFrame({
+    "city": ["delhi","mumbai"],
+    "windspeed": [7,12],
+}, index=[1,0])
+windspeed_df
+
+df = pd.concat([temperature_df,windspeed_df],axis=1)
+df
+
+df1 = pd.DataFrame({
+    "city": ["new york","chicago","orlando"],
+    "temperature": [21,14,35],
+})
+df1
+
+df2 = pd.DataFrame({
+    "city": ["chicago","new york","orlando","san diago"],
+    "humidity": [65,68,75],
+})
+df2
+
+result = pd.merge(df1,df2, on = "city")
+result
+
+# joins 
+df1 = pd.DataFrame({
+    "city": ["new york","chicago","orlando", "baltimore"],
+    "temperature": [21,14,35, 38],
+})
+df1
+
+df2 = pd.DataFrame({
+    "city": ["chicago","new york","san diego"],
+    "humidity": [65,68,71],
+})
+df2
+
+## 01 normal join (only common between both will comw in result)
+innerjn = pd.merge(df1,df2,on = "city")
+innerjn
+
+# now from documentation we know that by using HOW we can use diifent type of joins
+innerjn = pd.merge(df1,df2,on = "city",how='inner')
+
+# 02 left join 
+lftjn = pd.merge(df1,df2,on = "city",how='left')
+
+# 03 right join 
+rtjn= pd.merge(df1,df2,on = "city",how='right')
+
+# 04 outer join
+outrjn= pd.merge(df1,df2,on = "city",how='outer')
+
+'''
+
+Universal Memory TrickPandas me DataFrame ka shape hota hai:
+(rows, columns)
+Position 0 = Rows  axis = 0
+Position 1 = Columns axis=1
+
+'''
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 18 (matplotlib and seaborn)
+
+'''
+Matplotlib is the foundational data visualization library in Python. It transforms data from lists, NumPy arrays, or Pandas DataFrames into 2D plots like line charts, 
+bar graphs, histograms, and scatter plots
+
+Seaborn is a high-level Python data visualization library built on top of Matplotlib that is designed to work seamlessly with Pandas DataFrames
+
+
+'''
+
+df_sales = pd.read_excel('linechart.xlsx')
+df_sales.head()
+
+from matplotlib import pyplot as plt 
+
+# we can do this for size 
+plt.figure(figsize =(12,4)) # WE GAVE MANUAL SIZE 
+plt.plot(df_sales['Quarter'],df_sales['Fridge']) # giving the x and y axis for plotting the graph 
+plt.title('project sales')
+plt.show() # to show the result
+
+
+from matplotlib import pyplot as plt 
+plt.figure(figsize=(12,4))
+
+plt.plot(df_sales['Quarter'],df_sales['Fridge'],label='fridge')
+plt.plot(df_sales['Quarter'],df_sales['Dishwasher'],label='dishwasher')
+plt.plot(df_sales['Quarter'],df_sales['Washing Machine'],label='washing machine')
+plt.legend() # that box in top right corner
+plt.ylabel("revenue (min $)") # x and y asix k labels hai yeh 
+plt.xlabel("financial quarter")
+
+# pie chart 
+total_sales = df_sales[['Fridge','Dishwasher','Washing Machine']].sum()
+total_sales.index # ouput -> Index(['Fridge', 'Dishwasher', 'Washing Machine'], dtype='str')
+plt.pie(total_sales , labels = total_sales.index , autopct='%1.1f%%' , explode=(0.1,0,0) , shadow=True)
+
+
+# histogram 
+import seaborn as sns
+sns.histplot(df_score['Exam_Score'] , kde=True)
