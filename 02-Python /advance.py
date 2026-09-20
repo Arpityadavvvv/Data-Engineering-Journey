@@ -87,4 +87,10 @@ in  list text
 
 '''
 
+# these are importan resources 
+
+01 https://jsonplaceholder  # this is placeholder  on which we can test API's 
+
+02 if we use  http://127.0.0.1:8000/docs  # this is place fastapi provides api docs and testing 
+
 
