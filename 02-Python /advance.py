@@ -1,9 +1,11 @@
+# fastapi and data fetching through API 
 from fastapi import FastAPI
 
 app = FastAPI()
 
 
-@app.get("/")
+
+@app.get("/") #methods 
 def home():
   return {"message": "PyCharm + FastAPI setup complete! or baki chize bhi "}
 
@@ -22,7 +24,9 @@ food_items = {
   'american':['crsoo','latte','bun'],
   'italian':['pasta','bread']
 }
+
 from enum import Enum
+
 class avialblCuisine (str,Enum):
   indian = "indian"
   american = "american"
@@ -62,10 +66,10 @@ coupen = {
 }
 
 @app.get("/get_coupen/{code}")
-def get_coupen (code : int):
-      return coupen.get(code)
+def get_coupen (code : int):  # the code must be integer
+      return coupen.get(code) 
 
-#http://127.0.0.1:8000/docs will give you inbult documentation
+http://127.0.0.1:8000/docs will give you inbult documentation
 
 
 '''
@@ -94,7 +98,10 @@ in  list text
 02 if we use  http://127.0.0.1:8000/docs  # this is place fastapi provides api docs and testing 
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# class - 02 
+# class - 02  (Unit Testing with pytest)
+step 01 -> pip install pytest
+step 02 -> testing file should be of name _test or test_
+step 03 -> run commannd (python -m pytest ) or (python -m pytest -v) # this is more descriptive
 # src/customers_db.py
 
 class CustomersDB:
@@ -199,71 +206,220 @@ def test_get_all_customers(db):
     assert len(customers) == 2
 
     db.clear_customers()
+  
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# class - 03 (sql in python)
+
+import mysql.connector # step - 01
+
+mydb= mysql.connector.connect(  # step - 02
+    host="localhost",
+    user="root",
+    password='root',
+    database = 'expense_manager'
+)
+
+# is_connected -> its a feature through which , we can check that anything is connected or not
+
+if mydb.is_connected():
+    print('connection succesfull')
+else:
+    print('faild')
+
+
+# step - 01
+# cursor = mydb.cursor()  # THIS WILL GIVE YOU TUPLES
+
+cursor =  mydb.cursor(dictionary=True) # THIS WILL GIVE YOU REUSLTS IN FORM OF DICTIONARY
+
+# step - 02
+cursor.execute("select * FROM expenses") # inside this you should execute the sql
+
+# step - 03
+results = cursor.fetchall()  # it will give you results in tuple format
+
+
+
+# printing results 
+for result in results:
+    print(result)
+
+#----------------------------------(way -02)-----------------------------------------------------------------------------------------------------------------------------
+# by using function
+
+# 01
+import mysql.connector
+
+from contextlib import contextmanager # using context here  step - 02
+
+# 03 add context manager to just above the function
+
+@contextmanager
+def get_mydb_cursor(commit = False): # commit false means , yeh only for specfic insert function k liye hai 
+
+    mydb = mysql.connector.connect(
+     host='localhost',
+     user='root',
+     password='root',
+     database='expense_manager'
+    )
+
+# 03
+    if mydb.is_connected():
+       print('connection succesfull')
+    else:
+       print('failed')
+
+
+# 04
+    cursor = mydb.cursor()
+    # return cursor,mydb  # ye jis order me return krrhe ho , usi order me unpack krna hota hai
+    yield cursor
+    cursor.close()
+    mydb.close()
+
+def fetch_all():
+    with get_mydb_cursor() as cursor: # yha upr jese nhi krna (cursor =  mydb.cursor(dictionary=True)) yeild k karan sidhe use krskte h 
+     cursor.execute ("SELECT  * From expenses")
+     results = cursor.fetchall()
+     for result in results:
+      print(result)
+
+def insert_expense(expense_date, amount, category, notes):
+    with get_mydb_cursor(commit=True) as cursor: # commit is true kyoki , after insertion we have to commit na
+        cursor.execute(
+            "INSERT INTO expenses (expense_date, amount, category, notes) VALUES (%s, %s, %s, %s)",
+            (expense_date, amount, category, notes)
+        )
+
+def delete_expenses_for_date(expense_date):
+    with get_mydb_cursor(commit=True) as cursor:
+        cursor.execute("DELETE FROM expenses WHERE expense_date = %s", (expense_date,))
+
+
+
+
+def fetch_all_by_Date():
+   with get_mydb_cursor() as cursor:
+     cursor.execute ("SELECT  * From expenses where expense_date = %s",(expense_date))
+     results = cursor.fetchall()
+     for result in results:
+        print(result)
+
+
+
+if __name__ =='__main__':
+    fetch_all()
+
+
+
+
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# pydantic 
+# class - 03 (pydantic )
 
-from fstapi import FastAPI
-from pydantic import BaseModel
+from typing import Optional
+from fastapi import FastAPI
+from pydantic import BaseModel, ValidationError
 
+# ==========================================
+# 1. FastAPI App Initialization
+# ==========================================
 app = FastAPI()
 
 
+# ==========================================
+# 2. Pydantic Data Model Definition
+# ==========================================
+# BaseModel se inherit karne par yeh class ek strict Data Schema ban jati hai
 class User(BaseModel):
-    id: int
-    name: str
-    age: int
+    # Required Fields: Inka request me hona zaroori hai
+    id: int               # Must be an integer
+    name: str             # Must be a string
+    age: int              # Must be an integer
+    email: str            # Must be a string
 
-''' 
-#### Create a model for User
-@app.post("/add_user/")
-def create_user(user: User):
-    return f"User created successfully: User {user}"
-
-from pydantic import BaseModel
-
-class User(BaseModel):
-    id: int
-    name: str
-    age: int
-    email: str
-
-
-from pydantic import ValidationError
-
-user = User(id=3, name="Dhaval Patel")
-
-### It will throw an error when a field is missing
-
-from pydantic import ValidationError
-user = User(id=3, name="Dhaval Patel")
-from pydantic import ValidationError
-
-user = User(id=3, name="Dhaval Patel")
-
-
-02 #### It will throw error when invalid data type is passed
-
-User(id=3, name="Dhaval Patel", age="30 years", email="dhaval@xyz.com")
-'''
-
-'''
-# after automation it will not throw an error 
-
-User(id=3, name="Dhaval Patel", age="30", email="dhaval@xyz.com")
-
-from typing import Optional
-
-class User(BaseModel):
-    id: int
-    name: str
-    age: int
-    email: str
+    # Optional Field: Yeh field compulsory nahi hai.
+    # Agar client isse pass nahi karta, toh default value None assign ho jayegi.
     address: Optional[str] = None
 
-user = User(id=3, name="Dhaval Patel", age=30, email="dhaval@xyz.com")
-print(user)
-'''
+
+# ==========================================
+# 3. FastAPI API Endpoint Definition
+# ==========================================
+@app.post("/add_user/")
+def create_user(user: User):
+    """
+    Jab koi client /add_user/ API par JSON data bhejega:
+    1. FastAPI automatic JSON data ko 'User' Pydantic model se pass karwayega.
+    2. Data type correct hone par yeh function execute hoga.
+    """
+    return {
+        "status": "success",
+        "message": "User created successfully!",
+        "user_details": user
+    }
+
+
+# ==========================================
+# 4. Local Execution & Testing Section
+# ==========================================
+if __name__ == "__main__":
+    
+    # ----------------------------------------------------
+    # DEMO 1: Valid User with Automatic Type Coercion
+    # ----------------------------------------------------
+    print("--- 1. Testing Automatic Type Conversion (Coercion) ---")
+    
+    # Notice: 'age' me string "30" pass kiya gaya hai.
+    # Pydantic ise reject karne ki bajaye automatically integer 30 me convert kar dega.
+    user_valid = User(
+        id=1,
+        name="Dhaval Patel",
+        age="30",                  # String "30" -> Auto-converted to int 30
+        email="dhaval@xyz.com"     # 'address' pass nahi kiya, so it defaults to None
+    )
+    
+    print("User Object:", user_valid)
+    print("Age Type:", type(user_valid.age))        # 
+    print("Address Value:", user_valid.address)    # None
+
+
+    # ----------------------------------------------------
+    # DEMO 2: Invalid Data Type (Handling ValidationError)
+    # ----------------------------------------------------
+    print("\n--- 2. Testing Invalid Data Type (ValidationError) ---")
+    
+    try:
+        # Error Case: 'age' me "30 years" pass kiya gaya hai.
+        # String "30 years" ko integer me convert nahi kiya ja sakta.
+        user_invalid = User(
+            id=2,
+            name="Ankit Sharma",
+            age="30 years",               # ❌ Invalid value for int
+            email="ankit@xyz.com"
+        )
+    except ValidationError as error:
+        print("❌ Caught Expected ValidationError!")
+        print("Error Details:\n", error)
+
+
+    # ----------------------------------------------------
+    # DEMO 3: Missing Required Field
+    # ----------------------------------------------------
+    print("\n--- 3. Testing Missing Required Field ---")
+    
+    try:
+        # Error Case: 'email' field pass karna bhool gaye
+        user_missing_field = User(
+            id=3,
+            name="Pooja Verma",
+            age=25
+            # ❌ Missing required field: 'email'
+        )
+    except ValidationError as error:
+        print("❌ Caught Expected Missing Field Error!")
+        print("Error Details:\n", error)
 
 
 # final quiz learning 
@@ -310,7 +466,7 @@ df.groupby(”score”)[”player”].sum()
 
 Q19.
 Which of the following code snippets will raise a ValueError in Python?
-int("twenty")
+int("twenty")  # this will raise the valueError 
 "data" * "3"
 print(len([1, 2, 3]))
 result = 10 / 0
