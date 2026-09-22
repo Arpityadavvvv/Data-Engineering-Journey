@@ -266,3 +266,112 @@ print(user)
 '''
 
 
+# final quiz learning 
+#=------------------------------------------------------------------------------------------------#
+# Final Quiz question
+
+01 What is the purpose of PEP 20, also known as the Zen of Python?
+Ans :To provide a set of 19 guiding principles for writing clean, readable, and idiomatic Python code.
+
+02 To throw an exception you need to use the following in Python ?
+Ans: The raise keyword.
+
+03 The purpose of OCR (Optical Character Recognition) is to ?
+Ans :Convert images of text (scanned documents, photos, PDF images) into machine-editable and searchable text data
+
+04 The database and surrounding system that is used for analytical needs is called ?
+Ans :Data Warehouse (or an OLAP system - Online Analytical Processing).
+
+05 Write a regular expression to represent an Indian phone number. For example: (91)8899776655. Here first 4 characters must be (91)
+   and then there should be exactly 10 digits
+Ans:
+
+06 You have a string s="IBM|US|100|5.4", you want to separate individual components by
+   | so that you get "IBM", "US", "100" and "5.4" as a separate element. For this you can use,
+Ans: s.split('|')
+
+07 How to access the last letter of a string?
+Ans :Using negative indexing: s[-1]
+
+08 Python is popular because
+Ans Simple and highly readable syntax, vast library ecosystem, and versatility across different
+    domains (Data Engineering, AI, Web, Automation).
+
+09 Which of the following code snippets will raise a ValueError in Python?
+Ans
+
+Q12.
+Let’s say you have a pandas dataframe that has three columns (1) match_id (2) player_name (3) score. Each row represents a score by a player in a given match. What is the correct code that will display the player's name and their total score?
+
+df.player.groupby().score.sum()
+df.player.groupby().score.total()
+df.groupby(”player”)[”score”].sum()
+df.groupby(”score”)[”player”].sum()
+
+Q19.
+Which of the following code snippets will raise a ValueError in Python?
+int("twenty")
+"data" * "3"
+print(len([1, 2, 3]))
+result = 10 / 0
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# testing using pytest assignment 
+
+# iventory.py
+class Inventory:
+    def __init__(self):
+        self.stock = {}
+
+    def add_stock(self, item, quantity):
+        if item in self.stock:
+            self.stock[item] += quantity
+        else:
+            self.stock[item] = quantity
+
+    def remove_stock(self, item, quantity):
+        if item not in self.stock or self.stock[item] < quantity:
+            raise ValueError("Insufficient stock")
+        self.stock[item] -= quantity
+
+    def check_availability(self, item, quantity):
+        return self.stock.get(item, 0) >= quantity
+
+# test_inventory.py
+import pytest
+from iventory import Inventory
+
+def test_add_stock():
+    inv = Inventory()
+
+    # 2. ACT: Ussi warehouse me 100 Apples add kiye
+    inv.add_stock('Apple', 100)
+
+    # 3. ASSERT: Ussi warehouse se check kiya ki 100 Apples hain ya nahi
+    assert inv.check_availability('Apple',100) is True
+
+def test_remove_stock():
+    inv = Inventory()
+    inv.add_stock('Apple', 100)
+
+    inv.remove_stock('Apple',50)
+
+    assert inv.check_availability('Apple',50) is True
+
+def test_check_availability():
+    inv = Inventory()
+
+    # 01 Add the apple in stock
+    inv.add_stock('Apple', 100)
+
+    # 02 Remove 50 apples from stock
+    inv.remove_stock('Apple', 50)
+
+    # 03 now i am checking 50 apples are avilable in stock or not
+    inv.check_availability('Apple', 50) is True
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
