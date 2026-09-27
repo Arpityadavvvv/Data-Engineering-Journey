@@ -18,6 +18,7 @@ from 11 sept -> 21 sept
 python was completed 
 
 from 23 sept we will start Basics of DataEngineering
+from 24 sept -> 26 sept -> 27 sept (AWS S3 , DATALAKE , DATA WAREHOUSE)
 
 
 
