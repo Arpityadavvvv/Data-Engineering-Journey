@@ -19,6 +19,6 @@ python was completed
 
 from 23 sept we will start Basics of DataEngineering
 from 24 sept -> 26 sept -> 27 sept (AWS S3 , DATALAKE , DATA WAREHOUSE)
-
+from 1 oct - 7 oct (started AWS S3,LAMBDA,GLUE) GOT ERROR IN AWS VERIFICATION 
 
 
