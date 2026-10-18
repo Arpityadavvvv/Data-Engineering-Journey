@@ -3,25 +3,25 @@
 ## My journey from beginner to job-ready Data Engineer. Starting from 19 August 2026
 
 ### sql started   
-20 aug -> 
-22 aug -> 
-23 aug  (completed till cross joins) -> 
-24 to 30 Aug (6days gap) -> 
-31 Aug (completed till normalizations)->
-till 2 sept sql was completed 
+- 20 aug -> 
+- 22 aug -> 
+- 23 aug  (completed till cross joins) -> 
+- 24 to 30 Aug (6days gap) -> 
+- 31 Aug (completed till normalizations)->
+- till 2 sept sql was completed 
 
 ### python started 
-from 4 sept we will start python 
-till 7th sept completed ( numbers , strings )
-8 sept to 15th sept -> (completed pyhton till exceptional handeling),
-from 11 sept -> 21 sept 
-python was completed 
+- from 4 sept we will start python 
+- till 7th sept completed ( numbers , strings )
+- 8 sept to 15th sept -> (completed pyhton till exceptional handeling),
+- from 11 sept -> 21 sept 
+- python was completed 
 
 ### DE-BASICS STARTED FROM HERE 
-from 23 sept we will start Basics of DataEngineering
-from 24 sept -> 26 sept -> 27 sept (AWS S3 , DATALAKE , DATA WAREHOUSE)
-from 1 oct - 7 oct (started AWS S3,LAMBDA,GLUE) GOT ERROR IN AWS VERIFICATION)
-from 7 oct - 15 oct ( error got resolved in AWS)
-from 16 oct - 18 oct  ( completed remaining section , AWS REDSHIFT , ATHENA )
+- from 23 sept we will start Basics of DataEngineering
+- from 24 sept -> 26 sept -> 27 sept (AWS S3 , DATALAKE , DATA WAREHOUSE)
+- from 1 oct - 7 oct (started AWS S3,LAMBDA,GLUE) GOT ERROR IN AWS VERIFICATION)
+- from 7 oct - 15 oct ( error got resolved in AWS)
+- from 16 oct - 18 oct  ( completed remaining section , AWS REDSHIFT , ATHENA )
 
 
