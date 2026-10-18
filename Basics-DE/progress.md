@@ -1,6 +1,6 @@
-Complete Notes will be maintained in Notion.io 
+# Complete Notes will be maintained in Notion.io 
 
-Phase-01 ->  STAGING AREA 
+## Phase-01 ->  STAGING AREA 
              DATALAKE 
              DATA-WAREHOUSE 
              STRUCTURED VS UNSTRUCTURED DATA 
@@ -11,13 +11,20 @@ Phase-01 ->  STAGING AREA
              STAR VS SNOWFLAKE SCHEMA 
              EXTRACTION VS INGESTION 
 
-Phase-02 ->  INTRODUCTION TO AWS 
+## Phase-02 ->  INTRODUCTION TO AWS 
              AWS S3 (BUCKETS , OBJECT , KEY , RAW & PROCESSED STRUCTURE)
              Data Ingestion ( Manual and automated)
              AWS LAMBDA (FAAS)
              CSV TO PARQUET
              DATA TRANSFORMATION (AWS LAMBDA)
              AWS GLUE ( Visual ETL) 
+
+## phase -03  -> loading data into redshift and aws  athena
+             AWS REDSHIFT (creating table and configuration)
+             Making triggers for it (both logs and tickets)
+             Lambda function 
+             Complete ETL working 
+              
              
              
              
