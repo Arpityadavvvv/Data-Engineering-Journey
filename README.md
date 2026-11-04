@@ -23,5 +23,10 @@
 - from 1 oct - 7 oct (started AWS S3,LAMBDA,GLUE) GOT ERROR IN AWS VERIFICATION)
 - from 7 oct - 15 oct ( error got resolved in AWS)
 - from 16 oct - 18 oct  ( completed remaining section , AWS REDSHIFT , ATHENA )
+- Basics Of DE COMPLETED 20 OCT
+
+### Spark and DataBricks
+- from 21 oct -> 25 oct ( basics of databricks)
+- from 26 oct -> 3 Nov (  Spark internals )
 
 
