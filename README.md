@@ -28,5 +28,9 @@
 ### Spark and DataBricks
 - from 21 oct -> 25 oct ( basics of databricks)
 - from 26 oct -> 3 Nov (  Spark internals )
+- from 4 Nov to 10 nov (Diwali Break)
+
+### ShopVista Project 
+- from 11 nov 
 
 
